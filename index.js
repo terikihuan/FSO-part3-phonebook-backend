@@ -52,7 +52,7 @@ app.get("/api/persons/:id", (req, res, next) => {
     })
     .catch((error) => next(error))
 })
-app.get("/info", (req, res, next) => {
+app.get("/info", (req, res) => {
   Person.find({}).then((result) => {
     res.send(`
     <div>Phonebook has info for ${result.length} people</div>
@@ -62,14 +62,14 @@ app.get("/info", (req, res, next) => {
 })
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then((result) => {
+    .then(() => {
       res.status(204).end()
     })
     .catch((error) => next(error))
 })
 
 // POST & PUT
-morgan.token("data", function (req, res) {
+morgan.token("data", function (req) {
   return JSON.stringify(req.body)
 })
 app.use(
