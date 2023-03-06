@@ -4,30 +4,6 @@ const app = express()
 const morgan = require("morgan")
 const Person = require("./models/person")
 
-// Data
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-]
-
 // Use middleware
 app.use(express.json())
 app.use(express.static("build"))
@@ -82,13 +58,6 @@ app.post("/api/persons", (req, res, next) => {
   if (!body.name || !body.number) {
     return res.status(400).json({
       error: "Please provide name and number",
-    })
-  }
-  // Duplicate name
-  const duplicate = persons.find((p) => p.name === body.name)
-  if (duplicate) {
-    return res.status(400).json({
-      error: "Name must be unique",
     })
   }
 
