@@ -1,0 +1,62 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - master
+      # note that your "main" branch might be called main instead of master
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  pre_deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install dependencies
+        run: npm install
+      - name: Check style
+        run: npm run eslint
+      - name: e2e tests
+        uses: cypress-io/github-action@v5
+        with:
+          command: npm run test:e2e
+          start: npm start
+          wait-on: http://localhost:3001
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ success() }}
+        with:
+          severity: info
+          details: Test Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ failure() }}
+        with:
+          severity: error
+          details: Test Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Cancelled
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ cancelled() }}
+        with:
+          severity: warn
+          details: Test Cancelled!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+  deploy_render:
+    if: ${{ github.event_name == 'push' && !contains(join(toJSon(github.event.commits.*.message)), '#skip') }}
+    needs: [pre_deploy]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Deploy to Render
+        uses: sws2apps/render-deployment@main
+        with:
+          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
+          apiKey: ${{ secrets.RENDER_TOKEN }}
+          multipleDeployment: false #optional, default true

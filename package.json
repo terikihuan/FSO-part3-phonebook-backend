@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:e2e": "cypress run"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +23,9 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "cypress": "^12.9.0",
     "eslint": "^8.35.0",
+    "eslint-plugin-cypress": "^2.13.2",
     "nodemon": "^2.0.21"
   }
 }
