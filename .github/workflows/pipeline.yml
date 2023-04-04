@@ -3,11 +3,11 @@ name: Deployment pipeline
 on:
   push:
     branches:
-      - master
+      - main
       # note that your "main" branch might be called main instead of master
   workflow_dispatch:
   pull_request:
-    branches: [master]
+    branches: [main]
     types: [opened, synchronize]
 
 jobs:
