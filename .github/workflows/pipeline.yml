@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Check style
-        run: npm run eslint
+        run: npm run lint
       - name: e2e tests
         uses: cypress-io/github-action@v5
         with:
