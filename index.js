@@ -10,6 +10,9 @@ app.use(express.static("build"))
 app.use(morgan("tiny"))
 
 // *ROUTES
+app.get("/health", (req, res) => {
+  res.send("ok")
+})
 app.get("/api/persons", (req, res, next) => {
   Person.find({})
     .then((result) => {
