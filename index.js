@@ -9,9 +9,14 @@ app.use(express.json())
 app.use(express.static("build"))
 app.use(morgan("tiny"))
 
+// Random change
+
 // *ROUTES
 app.get("/health", (req, res) => {
   res.send("ok")
+})
+app.get("/version", (req, res) => {
+  res.send("v1")
 })
 app.get("/api/persons", (req, res, next) => {
   Person.find({})
