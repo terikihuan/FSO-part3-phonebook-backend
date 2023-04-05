@@ -15,6 +15,9 @@ app.use(morgan("tiny"))
 app.get("/health", (req, res) => {
   res.send("ok")
 })
+app.get("/version", (req, res) => {
+  res.send("v1")
+})
 app.get("/api/persons", (req, res, next) => {
   Person.find({})
     .then((result) => {
